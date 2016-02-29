@@ -85,7 +85,7 @@ int main()
 	file1.close();
 	file2.close();
 
-	//use double array to record the results of comparing°Acalaulate first, consider output format later
+	//use double array to record the results of comparingÔºåcalaulate first, consider output format later
 	double similarity[12];
 
 	//function1, similarity for name, LCS
@@ -116,29 +116,44 @@ int main()
 	if (data1[8] != "" && data2[8] != "")
 	{
 		string sentence1 = data1[8];//PTT,;
-		string sentence2 = data2[8];//FB,°B
+		string sentence2 = data2[8];//FB,„ÄÅ
 
 		string temp1[26];//at most 26 types
 		string temp2[26];
 
-		stringstream ss(sentence1);
+		stringstream ss(sentence1);//PTT
 		string item;
 		int i = 0;
+		int deno = 0;
 		while (getline(ss, item, ';')) 
 		{
 			temp1[i] = item;
 			i++;
 		}
+		deno = i;
 
-		stringstream ss(sentence2);
+		stringstream ss(sentence2);//FB
 		string item;
-		int i = 0;
+		i = 0;
 		while (getline(ss, item, ';'))
 		{
 			temp2[i] = item;
 			i++;
 		}
 
+		int same = 0;
+		for (int i = 0; i < deno; i++)
+		{
+			for (int j = 0; j < 26; j++)
+			{
+				if (temp1[i] == temp2[j] && temp2[j] != "")
+				{
+					same++;
+				}
+			}
+		}
+		
+		similarity[8] = same / deno;
 
 	}
 	else if (data1[8] == "" || data2[8] == "")
