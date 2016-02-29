@@ -103,6 +103,14 @@ int main()
 	//function3, similarity for birthday, 0/1 and jacard
 
 	//function4, similarity for blood type, 0/1
+	if (data1[3] == data2[3])
+	{
+		similarity[3] = 1;
+	}
+	else
+	{
+		similarity[3] = 0;
+	}
 
 	//function5, similarity for location, jacard
 
@@ -132,12 +140,12 @@ int main()
 		}
 		deno = i;
 
-		stringstream ss(sentence2);//FB
-		string item;
+		stringstream ss2(sentence2);//FB
+		string item2;
 		i = 0;
-		while (getline(ss, item, ';'))
+		while (getline(ss2, item2, ';'))
 		{
-			temp2[i] = item;
+			temp2[i] = item2;
 			i++;
 		}
 
@@ -146,14 +154,14 @@ int main()
 		{
 			for (int j = 0; j < 26; j++)
 			{
-				if (temp1[i] == temp2[j] && temp2[j] != "")
+				if (temp1[i] == temp2[j])
 				{
 					same++;
 				}
 			}
 		}
 		
-		similarity[8] = same / deno;
+		similarity[8] = (double)same / (double)deno;
 
 	}
 	else if (data1[8] == "" || data2[8] == "")
