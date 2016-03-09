@@ -137,7 +137,7 @@ int main()
 	ofstream logFile;
 	logFile.open("report.txt");
 
-	//function1, similarity for name, LCS
+	//function1, similarity for name, KMP
 	if (data1[0] == "" || data2[0] == "")
 	{
 		similarity[0] = 0;
@@ -172,68 +172,6 @@ int main()
 		for (int t = l-1; t >= 0; t--)
 		{
 			ptt = data1[0], fb = temp2[t];
-
-			//for (i = 0; i < fb.size(); i++)
-			//{
-			//	if (fb[i] <= 90 && fb[i] >= 65)
-			//	{
-			//		fb[i] = fb[i] + 32;
-			//	}
-			//}
-
-			//for (i = 0; i < ptt.size(); i++)
-			//{
-			//	if (ptt[i] <= 90 && ptt[i] >= 65)
-			//	{
-			//		ptt[i] = ptt[i] + 32;
-			//	}
-
-			//	if (ptt[i] == ';' || ptt[i] == ' ')
-			//	{
-			//		x++;
-			//	}
-			//}//所有英文字母統一為小寫。
-
-			//
-			//for ((int)i = fb.size() - 1; i > 0; i--)
-			//{
-			//	result = 0;
-
-			//	for ((int)j = 0; j < ptt.size(); j++)
-			//	{
-			//		int index = i + j;
-			//		if (fb[index] == ptt[j] && ptt[j] != ';' && ptt[j] != ' ')
-			//		{
-			//			result++;
-			//		}
-			//	}
-
-			//	if (result > max)
-			//	{
-			//		max = result;
-			//	}
-			//}
-
-			//for ((int)i = 0; i < ptt.size(); i++)
-			//{
-			//	result = 0;
-
-			//	for ((int)j = 0; j < fb.size(); j++)
-			//	{
-			//		int index = i + j;
-			//		if (ptt[index] == fb[j] && fb[j] != ';' && fb[j] != ' ')
-			//		{
-			//			result++;
-			//		}
-			//	}
-
-			//	if (result > max)
-			//	{
-			//		max = result;
-			//	}
-			//}
-			
-			//amount += max;
 			amount += KMP(data1[0], temp2[t]);
 		}
 
@@ -359,8 +297,106 @@ int main()
 	}
 
 	//function5, similarity for location, 0/1 and jacard
+	if (data1[4] == "" || data2[4] == "")
+	{
+		similarity[4] = 0;
+
+		logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
+		logFile << "similarity of location is 0 :" << endl;
+		logFile << "some data doesn't exist!" << endl;
+		logFile << "1 : " << data1[4] << " vs. " << "2 : " << data2[4] << endl << endl;
+	}
+	else if (data1[4] != "" || data2[4] != "")
+	{
+		int i, j, x = 0;
+
+		double result, max = 0;
+
+		string sentence = data2[4];//FB,、
+		string temp2[50];
+
+		stringstream ss(sentence);//FB
+		string item;
+		int l = 0;
+		while (getline(ss, item, ';'))
+		{
+			cout << "item " << l << " : " << item << endl;
+			temp2[l] = item;
+			l++;
+		}
+
+		string ptt, fb;
+		double amount = 0;
+
+		for (int t = l - 1; t >= 0; t--)
+		{
+			ptt = data1[4], fb = temp2[t];
+
+			amount += KMP(data1[4], temp2[t]);
+		}
+
+		cout << amount << " : " << (ptt.size() - x);
+		similarity[4] = amount / (ptt.size() - x);
+
+		if (similarity[4] == 0 || similarity[4] > 1)
+		{
+			logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
+			logFile << "similarity of location is 0 or larger than 1:" << endl;
+			logFile << "needs double checking!" << endl;
+			logFile << "1 : " << data1[4] << " vs. " << "2 : " << data2[4] << endl << endl;
+		}
+	}
 
 	//function6, similarity for education, 0/1 and jacard
+	if (data1[5] == "" || data2[5] == "")
+	{
+		similarity[5] = 0;
+
+		logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
+		logFile << "similarity of education is 0 :" << endl;
+		logFile << "some data doesn't exist!" << endl;
+		logFile << "1 : " << data1[5] << " vs. " << "2 : " << data2[5] << endl << endl;
+	}
+	else if (data1[5] != "" || data2[5] != "")
+	{
+		int i, j, x = 0;
+
+		double result, max = 0;
+
+		string sentence = data2[5];//FB,、
+		string temp2[50];
+
+		stringstream ss(sentence);//FB
+		string item;
+		int l = 0;
+		while (getline(ss, item, ';'))
+		{
+			cout << "item " << l << " : " << item << endl;
+			temp2[l] = item;
+			l++;
+		}
+
+		string ptt, fb;
+		double amount = 0;
+
+		for (int t = l - 1; t >= 0; t--)
+		{
+			ptt = data1[5], fb = temp2[t];
+
+			amount += KMP(data1[5], temp2[t]);
+		}
+
+		cout << amount << " : " << (ptt.size() - x);
+		similarity[5] = amount / (ptt.size() - x);
+
+		if (similarity[5] == 0 || similarity[5] > 1)
+		{
+			logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
+			logFile << "similarity of education is 0 or larger than 1:" << endl;
+			logFile << "needs double checking!" << endl;
+			logFile << "1 : " << data1[5] << " vs. " << "2 : " << data2[5] << endl << endl;
+		}
+	}
 
 	//function7, similarity for career, 0/1
 	if (data1[6] == "" || data2[6] == "")
@@ -374,17 +410,40 @@ int main()
 	}
 	else if (data1[6] != "" || data2[6] != "")
 	{
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		if (data1[6] == data2[6])//have problems here!!!!!
-		{
-			similarity[6] = 1;
-		}
-		if (data1[6] != data2[6])//report problems
-		{
-			similarity[6] = 0;
+		int i, j, x = 0;
 
+		double result, max = 0;
+
+		string sentence = data2[6];//FB,、
+		string temp2[50];
+
+		stringstream ss(sentence);//FB
+		string item;
+		int l = 0;
+		while (getline(ss, item, ';'))
+		{
+			cout << "item " << l << " : " << item << endl;
+			temp2[l] = item;
+			l++;
+		}
+
+		string ptt, fb;
+		double amount = 0;
+
+		for (int t = l - 1; t >= 0; t--)
+		{
+			ptt = data1[6], fb = temp2[t];
+
+			amount += KMP(data1[6], temp2[t]);
+		}
+
+		cout << amount << " : " << (ptt.size() - x);
+		similarity[6] = amount / (ptt.size() - x);
+
+		if (similarity[6] == 0 || similarity[6] > 1)
+		{
 			logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
-			logFile << "similarity of career is 0 :" << endl;
+			logFile << "similarity of career is 0 or larger than 1:" << endl;
 			logFile << "needs double checking!" << endl;
 			logFile << "1 : " << data1[6] << " vs. " << "2 : " << data2[6] << endl << endl;
 		}
@@ -402,17 +461,40 @@ int main()
 	}
 	else if (data1[7] != "" || data2[7] != "")
 	{
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		if (data1[7] == data2[7])//have problems here!!!!!
-		{
-			similarity[7] = 1;
-		}
-		if (data1[7] != data2[7])//report problems
-		{
-			similarity[7] = 0;
+		int i, j, x = 0;
 
+		double result, max = 0;
+
+		string sentence = data2[7];//FB,、
+		string temp2[50];
+
+		stringstream ss(sentence);//FB
+		string item;
+		int l = 0;
+		while (getline(ss, item, ';'))
+		{
+			cout << "item " << l << " : " << item << endl;
+			temp2[l] = item;
+			l++;
+		}
+
+		string ptt, fb;
+		double amount = 0;
+
+		for (int t = l - 1; t >= 0; t--)
+		{
+			ptt = data1[7], fb = temp2[t];
+
+			amount += KMP(data1[7], temp2[t]);
+		}
+
+		cout << amount << " : " << (ptt.size() - x);
+		similarity[7] = amount / (ptt.size() - x);
+
+		if (similarity[7] == 0 || similarity[7] > 1)
+		{
 			logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
-			logFile << "similarity of company is 0 :" << endl;
+			logFile << "similarity of company is 0 or larger than 1:" << endl;
 			logFile << "needs double checking!" << endl;
 			logFile << "1 : " << data1[7] << " vs. " << "2 : " << data2[7] << endl << endl;
 		}
@@ -466,18 +548,42 @@ int main()
 	{
 		similarity[8] = 0;//equals to 0 or just blank?
 	}
+	if (similarity[8] == 0)//report problems
+	{
+		logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
+		logFile << "similarity of hobby is 0 :" << endl;
+		logFile << "needs double checking!" << endl;
+		logFile << "1 : " << data1[8] << " vs. " << "2 : " << data2[8] << endl << endl;
+	}
 
 	//function10, similarity for marital status, 0/1
-	if (data1[7] == "" || data2[7] == "")
+	if (data1[9] == "" || data2[9] == "")
 	{
-		similarity[7] = 0;
+		similarity[9] = 0;
 	}
-	else if (data1[7] != "" || data2[7] != "")
+	else if (data1[9] != "" || data2[9] != "")
 	{
-		if (data1[7] == data2[7])//beware of different formatting
+		if (data1[9] == data2[9])//beware of different formatting
 		{
-			similarity[7] = 1;
+			similarity[9] = 1;
 		}
+
+		if (data1[9] != data2[9])//report problems
+		{
+			similarity[9] = 0;
+
+			logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
+			logFile << "similarity of marital status is 0 :" << endl;
+			logFile << "needs double checking!" << endl;
+			logFile << "1 : " << data1[9] << " vs. " << "2 : " << data2[9] << endl << endl;
+		}
+	}
+	if (similarity[9] == 0)//report problems
+	{
+		logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
+		logFile << "similarity of marital status is 0 :" << endl;
+		logFile << "needs double checking!" << endl;
+		logFile << "1 : " << data1[9] << " vs. " << "2 : " << data2[9] << endl << endl;
 	}
 
 	//function11, similarity for other social network, 0/1
@@ -528,10 +634,17 @@ int main()
 	{
 		similarity[10] = 0;//equals to 0 or just blank?
 	}
+	if (similarity[10] == 0)//report problems
+	{
+		logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
+		logFile << "similarity of SNS is 0 :" << endl;
+		logFile << "needs double checking!" << endl;
+		logFile << "1 : " << data1[10] << " vs. " << "2 : " << data2[10] << endl << endl;
+	}
 
 
 	//output similarity for debug
-	cout << "Similarity : " << endl;
+	cout << endl << "Similarity : " << endl;
 
 	for (int i = 0; i < 11; i++)
 	{
