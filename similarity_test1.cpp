@@ -5,7 +5,52 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <vector>
+#include <ctype.h>
 using namespace std;
+
+int KMP(string S, string K)
+{
+	vector<int> T(K.size() + 1, -1);
+	vector<int> matches;
+
+	if (K.size() == 0)
+	{
+		matches.push_back(0);
+		return matches.size();
+	}
+	for (int i = 1; i <= K.size(); i++)
+	{
+		int pos = T[i - 1];
+		while (pos != -1 && K[pos] != K[i - 1]) pos = T[pos];
+		T[i] = pos + 1;
+	}
+
+	int sp = 0;
+	int kp = 0;
+	int k_stop = 0;
+	while (sp < S.size())
+	{
+		while (kp != -1 && (kp == K.size() || K[kp] != S[sp])) kp = T[kp];
+		kp++;
+		sp++;
+		if (kp == K.size())
+		{
+			//k_stop = kp;
+			//matches.push_back((sp - K.size())-k_stop);
+			matches.push_back(kp);
+		}
+	}
+
+	int total = 0;
+	for (int i = 0; i < matches.size(); i++)
+	{	
+		int temp = matches[i];
+		total += temp;	
+	}
+	
+	return total;
+}
 
 
 int main()
@@ -93,6 +138,119 @@ int main()
 	logFile.open("report.txt");
 
 	//function1, similarity for name, LCS
+	if (data1[0] == "" || data2[0] == "")
+	{
+		similarity[0] = 0;
+
+		logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
+		logFile << "similarity of username is 0 :" << endl;
+		logFile << "some data doesn't exist!" << endl;
+		logFile << "1 : " << data1[0] << " vs. " << "2 : " << data2[0] << endl << endl;
+	}
+	else if (data1[0] != "" || data2[0] != "")
+	{
+		int i, j, x = 0;
+
+		double result, max = 0;
+
+		string sentence = data2[0];//FB,、
+		string temp2[50];
+
+		stringstream ss(sentence);//FB
+		string item;
+		int l = 0;
+		while (getline(ss, item, ';'))
+		{
+			cout << "item " << l << " : " << item << endl;
+			temp2[l] = item;
+			l++;
+		}
+		
+		string ptt, fb;
+		double amount = 0;
+		
+		for (int t = l-1; t >= 0; t--)
+		{
+			ptt = data1[0], fb = temp2[t];
+
+			//for (i = 0; i < fb.size(); i++)
+			//{
+			//	if (fb[i] <= 90 && fb[i] >= 65)
+			//	{
+			//		fb[i] = fb[i] + 32;
+			//	}
+			//}
+
+			//for (i = 0; i < ptt.size(); i++)
+			//{
+			//	if (ptt[i] <= 90 && ptt[i] >= 65)
+			//	{
+			//		ptt[i] = ptt[i] + 32;
+			//	}
+
+			//	if (ptt[i] == ';' || ptt[i] == ' ')
+			//	{
+			//		x++;
+			//	}
+			//}//所有英文字母統一為小寫。
+
+			//
+			//for ((int)i = fb.size() - 1; i > 0; i--)
+			//{
+			//	result = 0;
+
+			//	for ((int)j = 0; j < ptt.size(); j++)
+			//	{
+			//		int index = i + j;
+			//		if (fb[index] == ptt[j] && ptt[j] != ';' && ptt[j] != ' ')
+			//		{
+			//			result++;
+			//		}
+			//	}
+
+			//	if (result > max)
+			//	{
+			//		max = result;
+			//	}
+			//}
+
+			//for ((int)i = 0; i < ptt.size(); i++)
+			//{
+			//	result = 0;
+
+			//	for ((int)j = 0; j < fb.size(); j++)
+			//	{
+			//		int index = i + j;
+			//		if (ptt[index] == fb[j] && fb[j] != ';' && fb[j] != ' ')
+			//		{
+			//			result++;
+			//		}
+			//	}
+
+			//	if (result > max)
+			//	{
+			//		max = result;
+			//	}
+			//}
+			
+			//amount += max;
+			amount += KMP(data1[0], temp2[t]);
+		}
+
+		cout << amount << " : " << (ptt.size() - x);
+		similarity[0] = amount / (ptt.size() - x);
+
+		if (similarity[0] == 0 || similarity[0] > 1)
+		{
+			logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
+			logFile << "similarity of username is 0 or larger than 1:" << endl;
+			logFile << "needs double checking!" << endl;
+			logFile << "1 : " << data1[0] << " vs. " << "2 : " << data2[0] << endl << endl;
+		}
+		
+	}
+
+	
 
 	//function2, similarity for gender, 0/1
 	if (data1[1] == data2[1])
@@ -105,6 +263,90 @@ int main()
 	}
 
 	//function3, similarity for birthday, 0/1 and jacard
+	if (data1[2] != "" && data2[2] != "")
+	{
+		string sentence1 = data1[2];//PTT,;
+		string sentence2 = data2[2];//FB,、
+
+		string temp1[4];//at most 26 types
+		string temp2[4];
+
+		stringstream ss(sentence1);//PTT
+		string item;
+		int i = 0;
+		int t1 = 0, t2 = 0;
+		while (getline(ss, item, '/'))
+		{
+			temp1[i] = item;
+			i++;
+		}
+		t1 = i;
+
+		stringstream ss2(sentence2);//FB
+		string item2;
+		i = 0;
+		while (getline(ss2, item2, '/'))
+		{
+			temp2[i] = item2;
+			i++;
+		}
+		t2 = i;
+
+		if (t1 == 2 && t2 == 2)//both MM/DD
+		{
+			if (temp1[0] == temp2[0] && temp1[1] == temp2[1])
+			{
+				similarity[2] = 0.8;
+			}
+		}
+
+		if (t1 == 3 && t2 == 2)//YYYY/MM/DD and MM/DD
+		{
+			if (temp1[1] == temp2[0] && temp1[2] == temp2[1])
+			{
+				similarity[2] = 0.8;
+			}
+		}
+
+		if (t1 == 2 && t2 == 3)//MM/DD and YYYY/MM/DD
+		{
+			if (temp1[0] == temp2[1] && temp1[1] == temp2[2])
+			{
+				similarity[2] = 0.8;
+			}
+		}
+
+		if (t1 == 3 && t2 == 3)//YYYY/MM/DD and YYYY/MM/DD
+		{
+			if (temp1[1] == temp2[1] && temp1[2] == temp2[2])
+			{
+				similarity[2] = 0.8;
+			}
+			if (temp1[0] == temp2[0])
+			{
+				similarity[2] = 1;
+			}
+		}
+		else if (t1 < 2 && t2 < 2)
+		{
+			similarity[2] = 0;
+
+			logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
+			logFile << "similarity of birthday is 0 :" << endl;
+			logFile << "some data format is a bit off, needs double checking!" << endl;
+			logFile << "1 : " << data1[2] << " vs. " << "2 : " << data2[2] << endl << endl;
+		}
+
+	}
+	else if (data1[2] == "" || data2[2] == "")
+	{
+		similarity[2] = 0;
+
+		logFile << "files : " + fileName1 + " vs. " + fileName2 << endl;
+		logFile << "similarity of birthday is 0 :" << endl;
+		logFile << "some data doesn't exist!" << endl;
+		logFile << "1 : " << data1[2] << " vs. " << "2 : " << data2[2] << endl << endl;
+	}
 
 	//function4, similarity for blood type, 0/1
 	if (data1[3] == data2[3])
